@@ -7,12 +7,12 @@ app.use(cors());
 // 查询
 var mysql = require('mysql');
 var connection = mysql.createConnection({
-  host: '203.156.220.91',
-  user: 'root',
+	host:'localhost',
+	user: 'root',
   password: '123456',
-  port: '20077',
   database: 'CARD'
 });
+
 
 app.get('/cardInfo', function (req, res) {
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
@@ -20,7 +20,7 @@ app.get('/cardInfo', function (req, res) {
   connection.query(sql, function (err, result) {
     if (err) {
       console.log('[SELECT ERROR] - ', err.message);
-      res.end(err);
+      res.end(err.message);
       return;
     }
     res.end(resultTreatment(result));
@@ -33,7 +33,7 @@ app.get('/totalInfo',function(req,res){
   connection.query(sql, function (err, result) {
     if (err) {
       console.log('[SELECT ERROR] - ', err.message);
-      res.end(err);
+      res.end(err.message);
       return;
     }
     var times = result.map(bank => bank.time);
@@ -51,7 +51,7 @@ app.get('/updateMoney',function(req,res){
   connection.query(sql,[money,name],function(err, result){
     if(err){
       console.log('[SELECT ERROR] - ', err.message);
-      res.end(err);
+      res.end(err.message);
       return;
     }
     res.end('ok')
@@ -61,12 +61,13 @@ app.get('/updateMoney',function(req,res){
 
 // 将当前时间和总负债存
 app.get('/job_calculate',function(req,res){
+	console.log('同步更新');
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   var sumSQL = 'SELECT SUM(useMoney) as sumMoney FROM visa;'
   connection.query(sumSQL,function(err,result){
     if (err) {
-      // console.log('[SELECT ERROR] - ', err.message);
-      res.end(err);
+       console.log('[SELECT ERROR] - ', err.message);
+      res.end(err.message);
       return;
     }
     if(result.length < 1){
@@ -77,7 +78,7 @@ app.get('/job_calculate',function(req,res){
     var jobCalSql = 'INSERT INTO total (time,total_money) VALUES (?,?)';
     connection.query(jobCalSql,[nowTime, toalMoney],function(err,result){
       if(err){
-        // console.log('插入失败',err);
+         console.log('插入失败',err);
         res.end(err);
         return;
       }
@@ -93,7 +94,7 @@ var server = app.listen(10051, function () {
 
   var host = server.address().address
   var port = server.address().port
-  console.log('运行中');
+  console.log('运行中port:'+port+'host:'+host);
 })
 
 // 私有方法
