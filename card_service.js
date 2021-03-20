@@ -16,7 +16,7 @@ var connection = mysql.createConnection({
 
 app.get('/cardInfo', function (req, res) {
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-  var sql = 'SELECT * FROM visa';
+  var sql = 'SELECT * FROM visa ORDER BY useStartDay';
   connection.query(sql, function (err, result) {
     if (err) {
       console.log('[SELECT ERROR] - ', err.message);
