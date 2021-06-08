@@ -1,4 +1,4 @@
-var httpUrl = 'http://58.33.76.148:20076';
+var httpUrl = 'http://47.116.130.99:20076';
 new gridjs.Grid({
     columns: [{
         name: '银行',
